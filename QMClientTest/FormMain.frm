@@ -19,40 +19,113 @@ Begin VB.Form FormMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   2415
+      Height          =   2175
       Left            =   120
       Locked          =   -1  'True
       MultiLine       =   -1  'True
       ScrollBars      =   2  'Vertical
-      TabIndex        =   2
+      TabIndex        =   12
       Text            =   "FormMain.frx":0000
-      Top             =   1920
+      Top             =   2160
       Width           =   7935
    End
    Begin VB.Frame FrameAPI 
       Caption         =   "API Service"
-      Height          =   1695
+      Height          =   1935
       Left            =   120
       TabIndex        =   0
       Top             =   120
       Width           =   7935
+      Begin VB.CommandButton CmdConnect 
+         Caption         =   "Connect"
+         Height          =   375
+         Left            =   3840
+         TabIndex        =   11
+         Top             =   1320
+         Width           =   1215
+      End
+      Begin VB.TextBox TextAccount 
+         Height          =   285
+         Left            =   1080
+         TabIndex        =   10
+         Top             =   1440
+         Width           =   2415
+      End
+      Begin VB.TextBox TextPass 
+         Height          =   285
+         IMEMode         =   3  'DISABLE
+         Left            =   1080
+         TabIndex        =   8
+         Top             =   1080
+         Width           =   2415
+      End
+      Begin VB.TextBox TextUser 
+         Height          =   285
+         Left            =   1080
+         TabIndex        =   6
+         Top             =   720
+         Width           =   2415
+      End
+      Begin VB.TextBox TextPort 
+         Height          =   285
+         Left            =   4200
+         TabIndex        =   4
+         Text            =   "4242"
+         Top             =   360
+         Width           =   855
+      End
+      Begin VB.TextBox TextHost 
+         Height          =   285
+         Left            =   1080
+         TabIndex        =   2
+         Text            =   "myQMserver"
+         Top             =   360
+         Width           =   2415
+      End
+      Begin VB.Label Label5 
+         AutoSize        =   -1  'True
+         Caption         =   "Account"
+         Height          =   195
+         Left            =   120
+         TabIndex        =   9
+         Top             =   1440
+         Width           =   600
+      End
+      Begin VB.Label Label4 
+         AutoSize        =   -1  'True
+         Caption         =   "Password"
+         Height          =   195
+         Left            =   120
+         TabIndex        =   7
+         Top             =   1080
+         Width           =   690
+      End
+      Begin VB.Label Label3 
+         AutoSize        =   -1  'True
+         Caption         =   "User"
+         Height          =   195
+         Left            =   120
+         TabIndex        =   5
+         Top             =   720
+         Width           =   330
+      End
+      Begin VB.Label Label2 
+         AutoSize        =   -1  'True
+         Caption         =   "Port"
+         Height          =   195
+         Left            =   3720
+         TabIndex        =   3
+         Top             =   360
+         Width           =   285
+      End
       Begin VB.Label Label1 
          AutoSize        =   -1  'True
-         Caption         =   "TODO : connection properties"
-         BeginProperty Font 
-            Name            =   "Consolas"
-            Size            =   14.25
-            Charset         =   0
-            Weight          =   400
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         Height          =   330
-         Left            =   360
+         Caption         =   "Host"
+         Height          =   195
+         Left            =   120
          TabIndex        =   1
-         Top             =   720
-         Width           =   4200
+         Top             =   360
+         Width           =   330
       End
    End
 End
@@ -66,9 +139,48 @@ Private Sub Form_Load()
     LogThis "Enter API connection properties then click... umm... TODO, Create a Start button.", True
 End Sub
 
+Private Sub Form_Unload(Cancel As Integer)
+    On Error Resume Next
+    QMDisconnect
+End Sub
+
+Private Sub CmdConnect_Click()
+    '-----
+    Dim rc As Integer
+    Dim hostname As String, port As String, portNum As Integer
+    Dim username As String, pwd As String, account As String
+    '-----
+    hostname = Trim(TextHost.text)
+    port = Trim(TextPort.text)
+    username = Trim(TextUser.text)
+    pwd = Trim(TextPass.text)
+    account = Trim(TextAccount.text)
+     
+    portNum = 0
+    If IsNumeric(port) Then portNum = CInt(port)
+    If port = 0 Then
+        LogThis "* Invalid port number"
+        Exit Sub
+    End If
+
+    ' Call QMConnect passing BSTR pointers
+    LogThis vbCrLf & "Connecting...", True
+    rc = QMConnect(PtrFor(hostname), portNum, PtrFor(username), PtrFor(pwd), PtrFor(account))
+    If rc <> 0 Then
+        LogThis "QMConnect succeeded", True
+        If QMConnected() <> 0 Then
+            LogThis " — session OK"
+        Else
+            LogThis " — QMConnected returned FALSE"
+        End If
+    Else
+        LogThis "QMConnect failed", True
+    End If
+End Sub
+
 Private Sub Form_Resize()
     '-----
-    Dim pad As Integer, logH As Integer, logW As Integer
+    Dim pad As Integer, logH As Integer, logW As Integer, minW As Integer
     Dim clientW As Integer, clientH As Integer
     '-----
     If FormMain.WindowState = vbMinimized Then Exit Sub
@@ -78,8 +190,9 @@ Private Sub Form_Resize()
     If clientW < (pad * 3) Then Exit Sub
     If clientH < (pad * 10) Then Exit Sub
     '-----
+    minW = CmdConnect.Left + CmdConnect.Width + (pad * 2)
     logW = clientW - (pad * 2)
-    If logW > pad Then
+    If logW >= minW Then
         FrameAPI.Width = logW
         TextLog.Width = logW
     End If
@@ -90,7 +203,8 @@ End Sub
 Private Sub LogThis(msg As String, Optional withTimestamp As Boolean = False)
     Dim ts As String
     If withTimestamp Then ts = Format$(Time$, "HH:mm:ss") & ": "
-    TextLog.SelStart = Len(TextLog.Text)
+    TextLog.SelStart = Len(TextLog.text)
     TextLog.SelText = vbCrLf & ts & msg
-    TextLog.SelStart = Len(TextLog.Text)
+    TextLog.SelStart = Len(TextLog.text)
 End Sub
+
