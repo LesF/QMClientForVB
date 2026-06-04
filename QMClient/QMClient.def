@@ -1,0 +1,54 @@
+LIBRARY "QMClient"
+EXPORTS
+  DllRegisterServer @1
+  QMCall @2
+  QMChange @3
+  QMClearSelect @4
+  QMClose @5
+  QMConnect @6
+  QMConnectLocal @7
+  QMConnected @8
+  QMDcount @9
+  QMDebug @10
+  QMDel @11
+  QMDelete @12
+  QMDeleteu @13
+  QMDisconnect @14
+  QMDisconnectAll @15
+  QMEndCommand @16
+  QMEnterPackage @17
+  QMError @18
+  QMExecute @19
+  QMExitPackage @20
+  QMExtract @21
+  QMField @22
+  QMGetSession @23
+  QMIns @24
+  QMLocate @25
+  QMLogto @26
+  QMMarkMapping @27
+  QMMatch @28
+  QMMatchfield @29
+  QMOpen @30
+  QMRead @31
+  QMReadList @32
+  QMReadNext @33
+  QMReadl @34
+  QMReadu @35
+  QMRecordlock @36
+  QMRelease @37
+  QMReplace @38
+  QMRespond @39
+  QMSelect @40
+  QMSelectIndex @41
+  QMSelectLeft @42
+  QMSelectRight @43
+  QMSetLeft @44
+  QMSetRight @45
+  QMSetSession @46
+  QMStatus @47
+  QMWrite @48
+  QMWriteu @49
+
+; Exports use ordinals mapped to the DLL's export table (found by dumpbin).
+; VB6 can import these names directly.

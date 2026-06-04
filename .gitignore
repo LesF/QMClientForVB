@@ -1,0 +1,73 @@
+# ============================
+# Visual Studio (C/C++) ignores
+# ============================
+
+# Build results
+Debug/
+Release/
+x64/
+x86/
+bin/
+obj/
+ipch/
+*.pdb
+*.ilk
+*.iobj
+*.ipdb
+*.tlog
+*.log
+*.cache
+*.db
+*.opendb
+
+# VS user-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# VS Code browsing database
+.vs/
+
+# C/C++ intermediate files
+*.obj
+*.idb
+*.pch
+*.pdb
+*.res
+*.manifest
+
+# ============================
+# VB6 ignores
+# ============================
+
+# VB6 compiled binaries
+*.exe
+*.dll
+*.ocx
+
+# VB6 intermediate files
+*.vbw
+*.exp
+*.lib
+
+# VB6 forms compiled cache
+*.frx
+
+# ============================
+# Windows / general ignores
+# ============================
+
+Thumbs.db
+Desktop.ini
+
+# ============================
+# Your project-specific ignores
+# ============================
+
+# Copy of DLL dropped into VB6 test folder
+QMClientTest/*.dll
+
+# Any temporary scratch files
+*.bak
+*.tmp

@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="QMClient.vcxproj" Id="73284cd0-cb3f-4edf-9492-f4b43dd38691" />
+</Solution>
