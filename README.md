@@ -11,5 +11,5 @@
 - My first tools for testing the QM API service will use VB6, but I hope to step up to something more modern after this
 
 # Notes
-I have not assigned a license, assume this all follows the license terms applied in ScarletDME and any of it's dependencies
+I have not assigned a license, assume this all follows the license terms applied in [ScarletDME](https://github.com/geneb/ScarletDME) and any of it's dependencies
 
