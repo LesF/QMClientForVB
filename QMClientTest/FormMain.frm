@@ -41,7 +41,7 @@ Begin VB.Form FormMain
          Height          =   375
          Left            =   3840
          TabIndex        =   11
-         Top             =   1320
+         Top             =   720
          Width           =   1215
       End
       Begin VB.TextBox TextAccount 
@@ -70,7 +70,7 @@ Begin VB.Form FormMain
          Height          =   285
          Left            =   4200
          TabIndex        =   4
-         Text            =   "4242"
+         Text            =   "4243"
          Top             =   360
          Width           =   855
       End
@@ -78,9 +78,18 @@ Begin VB.Form FormMain
          Height          =   285
          Left            =   1080
          TabIndex        =   2
-         Text            =   "myQMserver"
+         Text            =   "192.168.1.174"
          Top             =   360
          Width           =   2415
+      End
+      Begin VB.Label Label6 
+         AutoSize        =   -1  'True
+         Caption         =   "As shown in LIST QM.ACCOUNTS"
+         Height          =   195
+         Left            =   3720
+         TabIndex        =   13
+         Top             =   1440
+         Width           =   2475
       End
       Begin VB.Label Label5 
          AutoSize        =   -1  'True
@@ -147,25 +156,25 @@ End Sub
 Private Sub CmdConnect_Click()
     '-----
     Dim rc As Integer
-    Dim hostname As String, port As String, portNum As Integer
-    Dim username As String, pwd As String, account As String
+    Dim hostname As String, Port As String, portNum As Integer
+    Dim UserName As String, pwd As String, Account As String
     '-----
-    hostname = Trim(TextHost.text)
-    port = Trim(TextPort.text)
-    username = Trim(TextUser.text)
-    pwd = Trim(TextPass.text)
-    account = Trim(TextAccount.text)
+    hostname = Trim(TextHost.Text)
+    Port = Trim(TextPort.Text)
+    UserName = Trim(TextUser.Text)
+    pwd = Trim(TextPass.Text)
+    Account = Trim(TextAccount.Text)
      
     portNum = 0
-    If IsNumeric(port) Then portNum = CInt(port)
-    If port = 0 Then
+    If IsNumeric(Port) Then portNum = CInt(Port)
+    If Port = 0 Then
         LogThis "* Invalid port number"
         Exit Sub
     End If
 
     ' Call QMConnect passing BSTR pointers
     LogThis vbCrLf & "Connecting...", True
-    rc = QMConnect(PtrFor(hostname), portNum, PtrFor(username), PtrFor(pwd), PtrFor(account))
+    rc = QMConnect(hostname, portNum, UserName, pwd, Account)
     If rc <> 0 Then
         LogThis "QMConnect succeeded", True
         If QMConnected() <> 0 Then
@@ -203,8 +212,8 @@ End Sub
 Private Sub LogThis(msg As String, Optional withTimestamp As Boolean = False)
     Dim ts As String
     If withTimestamp Then ts = Format$(Time$, "HH:mm:ss") & ": "
-    TextLog.SelStart = Len(TextLog.text)
+    TextLog.SelStart = Len(TextLog.Text)
     TextLog.SelText = vbCrLf & ts & msg
-    TextLog.SelStart = Len(TextLog.text)
+    TextLog.SelStart = Len(TextLog.Text)
 End Sub
 
