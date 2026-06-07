@@ -1,13 +1,13 @@
 VERSION 5.00
 Begin VB.Form FormMain 
    Caption         =   "So you want to know if QMClient works huh?"
-   ClientHeight    =   4500
+   ClientHeight    =   5880
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   8160
+   ClientWidth     =   10155
    LinkTopic       =   "Form1"
-   ScaleHeight     =   4500
-   ScaleWidth      =   8160
+   ScaleHeight     =   5880
+   ScaleWidth      =   10155
    StartUpPosition =   3  'Windows Default
    Begin VB.TextBox TextLog 
       BeginProperty Font 
@@ -19,15 +19,14 @@ Begin VB.Form FormMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   2175
+      Height          =   3615
       Left            =   120
       Locked          =   -1  'True
       MultiLine       =   -1  'True
       ScrollBars      =   2  'Vertical
       TabIndex        =   12
-      Text            =   "FormMain.frx":0000
       Top             =   2160
-      Width           =   7935
+      Width           =   9855
    End
    Begin VB.Frame FrameAPI 
       Caption         =   "API Service"
@@ -35,7 +34,7 @@ Begin VB.Form FormMain
       Left            =   120
       TabIndex        =   0
       Top             =   120
-      Width           =   7935
+      Width           =   9855
       Begin VB.CommandButton CmdConnect 
          Caption         =   "Connect"
          Height          =   375
@@ -145,19 +144,75 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 Private Sub Form_Load()
-    LogThis "Enter API connection properties then click... umm... TODO, Create a Start button.", True
+    LoadSettings
+    LogThis "Enter API connection properties then click Connect"
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
     On Error Resume Next
     QMDisconnect
+    QMDisconnectAll '-- which is needed?
+End Sub
+
+Private Sub SaveSettings()
+    Dim filepath As String
+    Dim fNum As Integer
+    
+    On Error Resume Next
+    filepath = App.Path
+    If Right$(filepath, 1) <> "\" Then filepath = filepath & "\"
+    filepath = filepath & "QMSettings.txt"
+    
+    fNum = FreeFile
+    Open filepath For Output As #fNum
+    Print #fNum, Trim(TextHost.Text)
+    Print #fNum, Trim(TextPort.Text)
+    Print #fNum, Trim(TextUser.Text)
+    Print #fNum, Trim(TextPass.Text)
+    Print #fNum, Trim(TextAccount.Text)
+    Close #fNum
+End Sub
+
+Private Sub LoadSettings()
+    Dim filepath As String
+    Dim fNum As Integer
+    Dim hostname As String
+    Dim Port As String
+    Dim UserName As String
+    Dim pwd As String
+    Dim Account As String
+    
+    On Error Resume Next
+    filepath = App.Path
+    If Right$(filepath, 1) <> "\" Then filepath = filepath & "\"
+    filepath = filepath & "QMSettings.txt"
+    
+    If Dir(filepath) <> "" Then
+        fNum = FreeFile
+        Open filepath For Input As #fNum
+        
+        If Not EOF(fNum) Then Line Input #fNum, hostname
+        If Not EOF(fNum) Then Line Input #fNum, Port
+        If Not EOF(fNum) Then Line Input #fNum, UserName
+        If Not EOF(fNum) Then Line Input #fNum, pwd
+        If Not EOF(fNum) Then Line Input #fNum, Account
+        
+        Close #fNum
+        
+        TextHost.Text = hostname
+        TextPort.Text = Port
+        TextUser.Text = UserName
+        TextPass.Text = pwd
+        TextAccount.Text = Account
+    End If
 End Sub
 
 Private Sub CmdConnect_Click()
     '-----
-    Dim rc As Integer
+    Dim rc As Integer, ErrNo As Integer
     Dim hostname As String, Port As String, portNum As Integer
     Dim UserName As String, pwd As String, Account As String
+    Dim testData As String
     '-----
     hostname = Trim(TextHost.Text)
     Port = Trim(TextPort.Text)
@@ -173,14 +228,23 @@ Private Sub CmdConnect_Click()
     End If
 
     ' Call QMConnect passing BSTR pointers
-    LogThis vbCrLf & "Connecting...", True
+    LogThis "Connecting...", True
     rc = QMConnect(hostname, portNum, UserName, pwd, Account)
     If rc <> 0 Then
         LogThis "QMConnect succeeded", True
         If QMConnected() <> 0 Then
-            LogThis " — session OK"
+            LogThis " - session OK"
+            
+            ' Save the successful settings
+            SaveSettings
+            
+            LogThis "LISTF", True
+            testData = QMExecute("LISTF", ErrNo)
+            LogThis "testData size: " & Len(testData) & ", errNo: " & ErrNo, True
+            testData = Replace(testData, Chr(254), vbCrLf)
+            LogThis testData
         Else
-            LogThis " — QMConnected returned FALSE"
+            LogThis " - QMConnected returned FALSE"
         End If
     Else
         LogThis "QMConnect failed", True

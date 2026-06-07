@@ -71,3 +71,4 @@ QMClientTest/*.dll
 # Any temporary scratch files
 *.bak
 *.tmp
+QMSettings.txt
