@@ -1,7 +1,7 @@
 # QMClient DLL build attempt
 
 ## Goals
-- Modify the source to be able to build QMClient.dll using Visual Studio 2026
+- Be able to build QMClient.dll using Visual Studio 2026
 - Test this dll in VB6 (on Windows 11)
 - Experiment with some data usage
 
