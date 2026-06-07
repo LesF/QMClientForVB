@@ -6,7 +6,7 @@
 - Experiment with some data usage
 
 ## Background
-- I have installed [ScarletDME](https://github.com/geneb/ScarletDME) on Linux
+- I have installed [ScarletDME](https://github.com/geneb/ScarletDME) on Linux (cos I used Pick, Unidata, and various other flavors of Pick many years ago, and wanted to revisit multivalue databases)
 - For personal coding fun, I will try to use this database in some modern UIs
 - My first tools for testing the QM API service will use VB6, but I hope to step up to something more modern after this
 
